@@ -1,0 +1,147 @@
+{
+  "name": "My workflow 8",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -360,
+        -80
+      ],
+      "id": "2ac3215c-e3e7-4234-bea6-f0343a06b428",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "TQ3EKw0ZwkYXyAWz",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "733150199871330",
+        "recipientPhoneNumber": "919347020471",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -80
+      ],
+      "id": "62ec622d-f22e-469d-b087-8ca61b3c7986",
+      "name": "WhatsApp Business Cloud",
+      "webhookId": "77be4049-4f2e-49f9-a1db-e654f678c421",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "9Sd4EeoYsNuN95J7",
+          "name": "WhatsApp account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }},{{ $json.headers.from }},",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant I want you to summarize the email like what are the key points they discussed in the email, If there are any meetings you have to tell me, and send all of them along with the email. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -140,
+        -80
+      ],
+      "id": "f5ad3d62-14e6-4238-9a40-06dac9211de0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "microsoft/mai-ds-r1:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        140
+      ],
+      "id": "b863cb40-10db-47b7-ab8c-64b05a4ae377",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "5X1C625QFfbm36j3",
+          "name": "OpenRouter account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Business Cloud": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2274c184-422a-4c9c-832c-a173d7a1454a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5aa2b80b653c22e1aaefc2d326b9e6bd973f04197306789241b41ef0ed4e4720"
+  },
+  "id": "pKH429tCWsqe7qYp",
+  "tags": []
+}
